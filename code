@@ -1,0 +1,68 @@
+#Create a Banking Management System using Customer and Account tables.
+--  Apply appropriate Primary Key and Foreign Key constraints.
+-- Apply suitable NOT NULL, UNIQUE, DEFAULT, and CHECK constraints.
+-- Insert at least 5 customers and 5 account records.
+-- Display accounts having a balance greater than a given amount.
+-- Display accounts in descending order of their balance.
+-- Calculate the total balance of all accounts using an aggregate function.
+-- Find the maximum and minimum account balance.
+-- Update the balance of a particular account.
+-- Delete an account based on a suitable condition.
+-- Display the final account records
+
+CREATE DATABASE Banking_DB;
+USE Banking_DB;
+CREATE TABLE Customer (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(15) NOT NULL UNIQUE,
+    city VARCHAR(50) DEFAULT 'Chandigarh'
+);
+CREATE TABLE Account (
+    account_id INT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    account_type VARCHAR(20) NOT NULL,
+    balance DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+    CHECK (balance >= 0),
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
+);
+
+
+INSERT INTO Customer(customer_id, customer_name, email, phone, city)
+VALUES
+(1, 'Rahul Sharma', 'rahul@gmail.com', '9876543210', 'Chandigarh'),
+(2, 'Priya Singh', 'priya@gmail.com', '9876543211', 'Mohali'),
+(3, 'Aman Verma', 'aman@gmail.com', '9876543212', 'Delhi'),
+(4, 'Neha Gupta', 'neha@gmail.com', '9876543213', 'Panchkula'),
+(5, 'Riya Kapoor', 'riya@gmail.com', '9876543214', 'Kharar');
+
+INSERT INTO Account(account_id, customer_id, account_type, balance)
+VALUES
+(101, 1, 'Savings', 25000.00),
+(102, 2, 'Current', 45000.00),
+(103, 3, 'Savings', 15000.00),
+(104, 4, 'Savings', 60000.00),
+(105, 5, 'Current', 35000.00);
+
+SELECT *FROM Account
+WHERE balance > 30000;
+
+SELECT *FROM Account
+ORDER BY balance DESC;
+
+SELECT SUM(balance) AS total_balance
+FROM Account;
+SELECT 
+    MAX(balance) AS maximum_balance,
+    MIN(balance) AS minimum_balance
+FROM Account;
+UPDATE Account
+SET balance = 50000.00
+WHERE account_id = 101;
+
+DELETE FROM Account
+WHERE balance < 20000;
+
+SELECT *FROM Account;
+SET SQL_SAFE_UPDATES = 0;
